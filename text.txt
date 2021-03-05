@@ -1,0 +1,14 @@
+https://api.allorigins.win/raw?url 
+
+
+const proxy = 'https://api.allorigins.win/raw?url';
+
+
+`https://api.allorigins.win/raw?url=`
+
+
+
+const baseEndpoint = 'https://restcountries.herokuapp.com/api/v1';
+const proxy = 'https://api.allorigins.win/raw?url';
+
+const response = await fetch(`${proxy}=${baseEndpoint}`);
