@@ -132,7 +132,7 @@ h3{
     border: 1px solid white;
 }
 
-@media(max-width:700px){
+@media(max-width:1000px){
 
 
 
@@ -140,14 +140,15 @@ h3{
         display: flex;
         position: absolute;
         width: 80vw;
-        height: 40vh;
+        height: 20vh;
         top: 5%;
         justify-content: space-around;
         align-items: center;
     }
 
     h2{
-        font-size: 15px;
+        font-size: 38px;
+        color: blue;
     }
 
     h3{
@@ -158,10 +159,10 @@ h3{
         background-color: #ba1c00;
         border: none;
         color: rgb(252, 250, 250);
-        padding: 15px 14px;
+        padding: 15px 6px;
         text-align: center;
         text-decoration: none;
-        font-size: 16px;
+        font-size: 10px;
         margin: 4px 2px;
         cursor: pointer;
         font-family: Minecrafter;

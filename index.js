@@ -9,7 +9,7 @@ const  MainContainer = document.querySelector('#MainContainer')
 
 
 let  continent  = 'Asia' // the state value of the continent choose -> asia defult
-let  healthData = 'deaths' //  the state of data recived  -> deaths,confirmed,recovered,critical ->  deaths defult
+let  healthData = 'death' //  the state of data recived  -> deaths,confirmed,recovered,critical ->  deaths defult
 
 world = {
     
@@ -18,7 +18,7 @@ world = {
 
 Chart.defaults.global.defaultFontColor = 'white';
 
-//working ///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 const getContentsWithCountry = async () =>{
     let request = await fetch(`${proxy}https://restcountries.herokuapp.com/api/v1`)
     let res = await request.json()
@@ -36,7 +36,7 @@ const getContentsWithCountry = async () =>{
 
 }
 
-// working /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 const getCountrysData = async () =>{
     let request = await fetch('https://corona-api.com/countries')
     let Countrydata = await request.json()
@@ -99,7 +99,6 @@ const MakeGraph = (continent,healthData) =>{
             }]
     },
     
-        // Configuration options go here
         options: {}
     });
 
@@ -107,7 +106,7 @@ const MakeGraph = (continent,healthData) =>{
 }
 
 
-const createContinentHealthButtons = () =>{ // need to fix it!!!!! bad practice!!!!!!
+const createContinentHealthButtons = () =>{ 
     
     let div = document.createElement('div')
     div.classList.add('flex')
