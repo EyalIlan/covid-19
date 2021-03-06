@@ -1,0 +1,103 @@
+
+
+
+
+@font-face{
+    src: url('./fonts/Minecrafter.Alt.ttf');
+    font-family: Minecrafter;
+}
+
+
+#MainContainer{
+    position: relative;
+    /* height: 100vh; */
+    z-index: 1;
+}
+
+#MainContainer::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: url('./images/backround3.png');
+    opacity: 0.7;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    z-index: -1;
+
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.darkBody{
+    background-color: black;
+    opacity: 0.8;
+}
+
+
+.cards{
+    display: flex;
+    position: absolute;
+    width: 80vw;
+    height: 25vh;
+    top: 10%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.card{
+    display: flex;
+    flex:1;
+    border: 4px solid #ba1c00;
+    color: white;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-evenly;
+}
+
+.none{
+   opacity: 0;
+}
+
+
+.flex{
+    display: flex;
+    justify-content: space-around;
+    width: 60vw;
+}
+
+
+.btn{
+  background-color: #ba1c00;
+  border: none;
+  color: rgb(252, 250, 250);
+  padding: 15px 45px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+  font-family: Minecrafter;
+ 
+}
+
+.btn2{
+    background-color: transparent;
+    border: transparent;
+    font-size: 17px;
+    cursor: pointer;
+    padding: 20px;
+    font-weight: bold;
+    color: rgb(245, 224, 224);
+}
