@@ -11,6 +11,11 @@ const  MainContainer = document.querySelector('#MainContainer')
 let  continent  = 'Asia' // the state value of the continent choose -> asia defult
 let  healthData = 'death' //  the state of data recived  -> deaths,confirmed,recovered,critical ->  deaths defult
 
+
+let totalDeaths = 0
+let positive = 0
+let recovered = 0
+
 world = {
     
 }
@@ -20,60 +25,64 @@ Chart.defaults.global.defaultFontColor = 'white';
 
 /////////////////////////////////////////////////////////////////
 const getContentsWithCountry = async () =>{
-    let request = await fetch(`${proxy}https://restcountries.herokuapp.com/api/v1`)
+    let request = await fetch(`${proxy}https://api.covidtracking.com/v1/states/current.json`)
     let res = await request.json()
+
     for(let el of res){  /// can use Map
-        if(!world[el.region]){  
-          world[el.region] = []
-          world[el.region].push(el.name)
+        if(!world[el.state]){  
+          world[el.state] = []
+          world[el.state].push(el)
+          totalDeaths = totalDeaths + (world[el.state][0].death || 1)
+          positive = positive + (world[el.state][0].positive || 1)
+          recovered = recovered + (world[el.state][0].recovered || 1)
         }else{
-            world[el.region].push(el.name)
+            world[el.state].push(el)
         }
     }
 //////////////////////////////////////////////////////////////////////////////
- 
- await  getCountrysData()
+//  await  getCountrysData()
 
 }
 
 ///////////////////////////////////////////////////////////////////
-const getCountrysData = async () =>{
-    let request = await fetch('https://corona-api.com/countries')
-    let Countrydata = await request.json()
+// const getCountrysData = async () =>{
+//     let request = await fetch('https://corona-api.com/countries')
+//     let Countrydata = await request.json()
     
-    for(mainland in world){
-        let CountryArray = []
-      for(countryName of world[mainland]){
-          for(let country of Countrydata.data){
-              if(country.name === countryName.common){
-                CountryArray.push({
-                    name:country.name,
-                    death:country.latest_data.deaths,
-                    confirmed:country.latest_data.confirmed,
-                    recovered:country.latest_data.recovered,
-                    critical:country.latest_data.critical
-                })
-              }
-          }
-      }
+//     for(mainland in world){
+//         let CountryArray = []
+//       for(countryName of world[mainland]){
+//           for(let country of Countrydata.data){
+//               if(country.name === countryName.common){
+//                 CountryArray.push({
+//                     name:country.name,
+//                     death:country.latest_data.deaths,
+//                     confirmed:country.latest_data.confirmed,
+//                     recovered:country.latest_data.recovered,
+//                     critical:country.latest_data.critical
+//                 })
+//               }
+//           }
+//       }
    
-      world[mainland] = CountryArray
-    }
-   return world
-}
+//       world[mainland] = CountryArray
+//     }
+//    return world
+// }
 
 //////////////////////////////////////////////////////////////////////////
 
 
-const MakeGraph = (continent,healthData) =>{
-    
+const MakeGraph = (healthData) =>{
     let countryNames = []
     let HealthNumbers = []
-    for(let el of world[continent]){
-        countryNames.push(el.name)
-        HealthNumbers.push(el[healthData])
+    for(let el in world){
+
+        countryNames.push(el)
+        world[el][0][healthData]?HealthNumbers.push(world[el][0][healthData]):HealthNumbers.push(1)
     }
     
+
     let chart = new Chart(ctx, {
         type: 'line',
     
@@ -106,91 +115,88 @@ const MakeGraph = (continent,healthData) =>{
 }
 
 
-const createContinentHealthButtons = () =>{ 
-    
-    let div = document.createElement('div')
-    div.classList.add('flex')
-    let div2 = document.createElement('div')
-    div2.classList.add('flex')
-    for(let el in world['Asia'][0]){
-        if(el !== 'name'){
-            let button =  document.createElement('button')
-            button.setAttribute('healthType',el)
-            button.classList.add('btn')
-            button.innerHTML = el
-            div.appendChild(button)
-        }
-    }
-    container.appendChild(div)
-    for(let el in world){
-        if(el !== ''){
-            let button =  document.createElement('button')
-            button.setAttribute('continent',el)
-            button.classList.add('btn')
-            button.innerHTML = el
-            div2.appendChild(button)
-        }
-    }
-    container.appendChild(div2)  
-}
+// const createContinentHealthButtons = () =>{ 
+//     console.log(world);
+//     console.log('in create buttons');
+//     let div = document.createElement('div')
+//     div.classList.add('flex')
+//     let div2 = document.createElement('div')
+//     div2.classList.add('flex')
+//     for(let el in world[0]){
+//         if(el !== 'state'){
+//             let button =  document.createElement('button')
+//             button.setAttribute('healthType',el)
+//             button.classList.add('btn')
+//             button.innerHTML = el
+//             div.appendChild(button)
+//         }
+//     }
+//     container.appendChild(div)
+//     // for(let el in world){
+//     //     if(el !== ''){
+//     //         let button =  document.createElement('button')
+//     //         button.setAttribute('continent',el)
+//     //         button.classList.add('btn')
+//     //         button.innerHTML = el
+//     //         div2.appendChild(button)
+//     //     }
+//     // }
+//     container.appendChild(div2)  
+// }
 
 
 
 const ButtonEvent = () =>{
-    const allButtons = document.querySelectorAll('button')
+    console.log(world);
+    const allButtons = document.querySelectorAll('.card')
     allButtons.forEach(el =>{
         el.addEventListener('click',(p)=>{
-            if(p.target.getAttribute('healthType') === null){
-                continent = p.target.getAttribute('continent')
-            }else{
-                healthData = p.target.getAttribute('healthType')
-            }
-            MakeGraph(continent,healthData)
-            createCountryButtons()
+            console.log(p.target.getAttribute('type'));
+            let type = p.target.getAttribute('type')
+
+            MakeGraph(type)
+            // createCountryButtons()
         })
     })
 }
 
 const createCountryButtons = () =>{
 
-    const CountryButtons = document.querySelectorAll('.btn2')
-    CountryButtons.forEach(p =>{
-        p.remove()
-    })
+    const HealthCards = document.querySelectorAll('.card h3')
+    // for(let country of world[continent]){
+    //    let bt = document.createElement('button')
+    //    bt.setAttribute('death',country.death)
+    //    bt.setAttribute('confirmed',country.confirmed)
+    //    bt.setAttribute('recovered',country.recovered)
+    //    bt.setAttribute('critical',country.critical)   
+    //    bt.classList.add('btn2')  
+    //    bt.innerHTML =  country.name
 
-    for(let country of world[continent]){
-       let bt = document.createElement('button')
-       bt.setAttribute('death',country.death)
-       bt.setAttribute('confirmed',country.confirmed)
-       bt.setAttribute('recovered',country.recovered)
-       bt.setAttribute('critical',country.critical)   
-       bt.classList.add('btn2')  
-       bt.innerHTML =  country.name
+    //    bt.addEventListener('click', p =>{
+            console.log(positive);
 
-       bt.addEventListener('click', p =>{
-            cardsTitles[0].innerHTML = p.target.getAttribute('death')
-            cardsTitles[1].innerHTML = p.target.getAttribute('confirmed')
-            cardsTitles[2].innerHTML = p.target.getAttribute('recovered')
-            cards.classList.remove('none')
-            ctx2.classList.add('none')
-             
-       }) 
+            HealthCards[0].innerHTML = totalDeaths
+            HealthCards[1].innerHTML = positive
+            HealthCards[2].innerHTML = recovered
+         
+}         
+    //    }) 
 
-       MainContainer.appendChild(bt)
-    }
+    //    MainContainer.appendChild(bt)
+    // }
        
-}
+// }
 
-cards.addEventListener('click',p =>{
-    cards.classList.add('none')
-    ctx2.classList.remove('none')
-})
+// cards.addEventListener('click',p =>{
+//     cards.classList.add('none')
+//     ctx2.classList.remove('none')
+// })
 
 
 const run = async () =>{
     await getContentsWithCountry()
-    MakeGraph('Asia','death')
-    createContinentHealthButtons()
+    MakeGraph('death')
+    // createContinentHealthButtons()
     ButtonEvent()
     createCountryButtons()
 }
